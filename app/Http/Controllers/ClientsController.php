@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -13,28 +12,28 @@ class ClientsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|\Inertia\Response
      */
     public function index()
     {
-        return Client::all();
+        return Inertia::render('Clients');
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|\Inertia\Response
      */
     public function create()
     {
-
+        return Inertia::render('Clients/AddClient');
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -55,8 +54,9 @@ class ClientsController extends Controller
 
         $client->save();
 
-        return Redirect::route('clients')->with('message', 'Client added to database');
-
+//        \Session::flash('message', 'Client added to database' );
+        return \redirect("/clients")->with('message', 'Client added to database');
+//        return Redirect::route('clients')->with('message', 'Client added to database');
     }
 
     /**

@@ -20,16 +20,21 @@ Route::get('/', function () {
 })->middleware(['auth', 'verified'])->name('home');
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+//    \Illuminate\Support\Facades\Session::flash("message", "We are in the dashboard");
+    return Inertia::render('Dashboard')->with("message", "We are in the dashboard");
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/drivers', function () {
     return Inertia::render('Drivers');
 })->middleware(['auth', 'verified'])->name('drivers');
 
-Route::get('/clients', function () {
-    return Inertia::render('Clients');
-})->middleware(['auth', 'verified'])->name('clients');
+Route::group(["prefix"  =>  "clients", "middleware" => ['auth', 'verified']], function (){
+    Route::get('/', "App\Http\Controllers\ClientsController@index")->name('clients');
+    Route::post('/', "App\Http\Controllers\ClientsController@store")->name('clients.store');
+    Route::get('/add', "App\Http\Controllers\ClientsController@create")->name('clients.add');
+    Route::get("/edit", "App\Http\Controllers\ClientsController@create")->name('clients.edit');
+});
+
 
 Route::get('/jobs', function () {
     return Inertia::render('Jobs');
