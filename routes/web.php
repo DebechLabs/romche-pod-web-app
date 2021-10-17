@@ -24,21 +24,19 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard')->with("message", "We are in the dashboard");
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/drivers', function () {
-    return Inertia::render('Drivers');
-})->middleware(['auth', 'verified'])->name('drivers');
+Route::resource('drivers', "App\Http\Controllers\DriversController")->middleware(['auth', 'verified']);
 
 Route::group(["prefix"  =>  "clients", "middleware" => ['auth', 'verified']], function (){
     Route::get('/', "App\Http\Controllers\ClientsController@index")->name('clients');
     Route::post('/', "App\Http\Controllers\ClientsController@store")->name('clients.store');
     Route::get('/add', "App\Http\Controllers\ClientsController@create")->name('clients.add');
-    Route::get("/edit", "App\Http\Controllers\ClientsController@create")->name('clients.edit');
+    Route::get("/{id}/edit", "App\Http\Controllers\ClientsController@edit")->name('clients.edit');
+    Route::post("/{id}", [\App\Http\Controllers\ClientsController::class, "update"])->name("clients.update");
+    Route::delete("/{id}", [\App\Http\Controllers\ClientsController::class, "destroy"])->name("clients.destroy");
 });
 
-
-Route::get('/jobs', function () {
-    return Inertia::render('Jobs');
-})->middleware(['auth', 'verified'])->name('jobs');
+Route::resource("jobs", \App\Http\Controllers\ClientJobsController::class)->middleware(['auth', 'verified']);
+Route::resource("fleet", \App\Http\Controllers\FleetController::class)->middleware(['auth', 'verified']);
 
 Route::get('/invoicing', function () {
     return Inertia::render('Invoicing');

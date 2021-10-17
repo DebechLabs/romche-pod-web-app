@@ -1,6 +1,6 @@
 <template>
     <div>
-        <toast></toast>
+        <toast :flash="$page.props.flash" :popstate="$page.popstate"></toast>
         <div class="min-h-screen bg-gray-100">
             <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
@@ -19,13 +19,16 @@
                                 <BreezeNavLink :href="route('dashboard')" :active="route().current('dashboard') || route().current('home')">
                                     Dashboard
                                 </BreezeNavLink>
+                                <BreezeNavLink :href="route('fleet.index')" :active="route().current('fleet.index')">
+                                    Fleet
+                                </BreezeNavLink>
                                 <BreezeNavLink :href="route('clients')" :active="route().current('clients')">
                                     Clients
                                 </BreezeNavLink>
-                                <BreezeNavLink :href="route('drivers')" :active="route().current('drivers')">
+                                <BreezeNavLink :href="route('drivers.index')" :active="route().current('drivers.index')">
                                     Drivers
                                 </BreezeNavLink>
-                                <BreezeNavLink :href="route('jobs')" :active="route().current('jobs')">
+                                <BreezeNavLink :href="route('jobs.index')" :active="route().current('jobs.index')">
                                     Jobs
                                 </BreezeNavLink>
                                 <BreezeNavLink :href="route('invoicing')" :active="route().current('invoicing')">
@@ -83,13 +86,16 @@
                         <BreezeResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </BreezeResponsiveNavLink>
+                        <BreezeResponsiveNavLink :href="route('fleet.index')" :active="route().current('fleet.index')">
+                            Fleet
+                        </BreezeResponsiveNavLink>
                         <BreezeResponsiveNavLink :href="route('clients')" :active="route().current('clients')">
                             Clients
                         </BreezeResponsiveNavLink>
-                        <BreezeResponsiveNavLink :href="route('drivers')" :active="route().current('drivers')">
+                        <BreezeResponsiveNavLink :href="route('drivers.index')" :active="route().current('drivers.index')">
                             Drivers
                         </BreezeResponsiveNavLink>
-                        <BreezeResponsiveNavLink :href="route('jobs')" :active="route().current('jobs')">
+                        <BreezeResponsiveNavLink :href="route('jobs.index')" :active="route().current('jobs.index')">
                             Jobs
                         </BreezeResponsiveNavLink>
                         <BreezeResponsiveNavLink :href="route('invoicing')" :active="route().current('invoicing')">

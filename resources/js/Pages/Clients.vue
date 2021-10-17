@@ -21,7 +21,7 @@
                                 <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                                     <table class="w-full">
                                         <thead>
-                                            <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
+                                            <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
 <!--                                                <th class="px-4 py-3">#</th>-->
                                                 <th class="px-4 py-3">Client Name</th>
 <!--                                                <th class="px-4 py-3">Client Short Name</th>-->
@@ -31,12 +31,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="client in clients" class="text-gray-700">
+                                            <tr v-for="client in clients" class="text-gray-700 border-b">
 <!--                                                <td class="px-4 py-3 border">{{ client.id }}</td>-->
-                                                <td class="px-4 py-3 border">
+                                                <td class="px-4 py-3">
                                                     <div class="flex items-center text-sm">
                                                         <div class="relative w-8 h-8 mr-3 rounded-full md:block">
-                                                            <img class="object-cover w-full h-full rounded-full" :src="`storage/${client.logo}`" alt="" loading="lazy" />
+                                                            <img class="object-cover w-full h-full rounded-full" :src="`${client.client_logo}`" alt="" loading="lazy" />
                                                             <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                                                         </div>
                                                         <div>
@@ -46,9 +46,15 @@
                                                     </div>
                                                 </td>
 <!--                                                <td class="px-4 py-3 border"></td>-->
-                                                <td class="px-4 py-3 border">{{ client.goods_description }}</td>
-                                                <td class="px-4 py-3 border">{{ client.kra_pin }}</td>
-                                                <td class="px-4 py-3 border"></td>
+                                                <td class="px-4 py-3">{{ client.goods_description }}</td>
+                                                <td class="px-4 py-3">{{ client.kra_pin }}</td>
+                                                <td class="px-4 py-3">
+                                                    <div class="flex items-center justify-center">
+                                                        <Link class="mr-2" :href="$routes('clients.edit', client.id)"><icon name="pencil-alt"></icon></Link>
+                                                        <button class="mr-2" @click="deleteClient(client.id)"><icon name="trash"></icon></button>
+                                                        <button><icon name="truck"></icon></button>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -64,18 +70,21 @@
 
 <script>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
+import Button from "@/Components/Button";
+import { useForm } from '@inertiajs/inertia-vue3'
 
 export default {
     components: {
+        Button,
         BreezeAuthenticatedLayout,
     },
     data(){
         return {
-            clients : []
+            clients : this.$page.props.clients
         }
     },
     mounted(){
-        this.getClients()
+        // this.getClients()
     },
     methods: {
         getClients: function () {
@@ -83,6 +92,24 @@ export default {
                 .then(res => {
                     this.clients =res.data
                 })
+        },
+        deleteClient: function (id) {
+            this.$swal({
+                title: "Delete Client",
+                text: "This action cannot be undone. Proceed?",
+                showCancelButton: true,
+                confirmButtonText: 'Continue',
+                showLoaderOnConfirm: true
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    let form = new useForm({
+                        id: id
+                    })
+
+                    form.delete(`/clients/${id}`)
+                }
+            })
         }
     }
 }

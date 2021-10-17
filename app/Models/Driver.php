@@ -11,4 +11,9 @@ class Driver extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ["last_name", "other_names", "date_of_birth", "kra_pin", "license_no"];
+    protected $appends = ["driver_name"];
+
+    public function getDriverNameAttribute(){
+        return strtoupper($this->last_name) . " " . ucwords(strtolower($this->other_names));
+    }
 }

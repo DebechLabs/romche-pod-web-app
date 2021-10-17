@@ -7,7 +7,7 @@
                 <icon name="camera" class="h-6 w-6"></icon>
             </button>
 
-            <button v-if="this.file" type="button" @click="remove" class="rounded-full hover:bg-white hover:bg-opacity-25 p-2 focus:outline-none text-white transition duration-200">
+            <button v-if="this.file || this.defaultVal" type="button" @click="remove" class="rounded-full hover:bg-white hover:bg-opacity-25 p-2 focus:outline-none text-white transition duration-200">
                 <icon name="x" class="h-6 w-6"></icon>
             </button>
         </div>
@@ -20,10 +20,14 @@ export default {
     name: "AvatarUpload",
     components: {Icon},
     props: {
-        value: File
+        value: File,
+        defaultVal: String
     },
     data(){
         let defaultImage = "/images/default.png"
+        if (this.defaultVal){
+            defaultImage = this.defaultVal
+        }
         return {
             src: defaultImage,
             defaultImage: defaultImage,

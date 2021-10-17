@@ -26,8 +26,15 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Inertia::share('flash', function(){
+            return Session::get("flash");
+        });
+
+        Inertia::share('popstate', function() { return false; });
+        Inertia::share('fleet_types', function () {
             return [
-                "message"   => Session::get("message")
+                ['id' => 'lorry', 'name' => 'Lorry'],
+                ['id' => 'car', 'name'  =>  'Car'],
+                ['id' => 'pick-up', 'name'  =>  'Pick Up'],
             ];
         });
     }
