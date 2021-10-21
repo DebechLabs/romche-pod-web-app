@@ -56,6 +56,15 @@
                                     </div>
                                 </div>
 
+                                <div class="w-full lg:w-6/12 px-4">
+                                    <div class="relative w-full mb-3">
+                                        <label class="block uppercase text-blueGray-600 mb-2">Vehicle</label>
+                                        <select name="driver" v-model="form.fleet_id" class="border-gray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" required>
+                                            <option v-for="fleet in $page.props.fleet" :key="fleet.id" :value="fleet.id">{{ fleet.registration_no }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="w-full px-4">
                                     <div class="relative w-full mb-3">
                                         <label class="block uppercase text-blueGray-600 mb-2">Goods Description</label>

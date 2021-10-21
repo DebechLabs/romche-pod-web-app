@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\ClientJob;
 use App\Models\Driver;
+use App\Models\Fleet;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -34,7 +35,8 @@ class ClientJobsController extends Controller
         return Inertia::render("Jobs/AddJob")
             ->with([
                 "clients"   =>  Client::all(),
-                "drivers"   =>  Driver::all()
+                "drivers"   =>  Driver::all(),
+                "fleet"     =>  Fleet::all()
             ]);
     }
 
@@ -51,7 +53,8 @@ class ClientJobsController extends Controller
             'client_id'             =>  'required',
             'goods_description'     =>  'required',
             'pickup'                =>  'required',
-            'destination'           =>  'required'
+            'destination'           =>  'required',
+            'vehicle'               =>  'required'
         ]);
 
         $job = new ClientJob();
@@ -62,6 +65,7 @@ class ClientJobsController extends Controller
         $job->pickup = $request->pickup;
         $job->destination = $request->destination;
         $job->tracking_number = \str_random(10);
+        $job->fleet_id = $request->fleet_id;
 
         $job->save();
 
@@ -99,6 +103,7 @@ class ClientJobsController extends Controller
             ->with([
                 "clients"   =>  Client::all(),
                 "drivers"   =>  Driver::all(),
+                "fleet"     =>  Fleet::all(),
                 "job"       =>  ClientJob::find($id)
             ]);
     }
@@ -117,7 +122,8 @@ class ClientJobsController extends Controller
             'client_id'             =>  'required',
             'goods_description'     =>  'required',
             'pickup'                =>  'required',
-            'destination'           =>  'required'
+            'destination'           =>  'required',
+            'fleet_id'              =>  'required'
         ]);
 
         $job = ClientJob::findOrFail($id);
@@ -128,6 +134,7 @@ class ClientJobsController extends Controller
         $job->pickup = $request->pickup;
         $job->destination = $request->destination;
         $job->status = $request->status;
+        $job->fleet_id = $request->fleet_id;
 
         $job->save();
 

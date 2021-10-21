@@ -1,5 +1,5 @@
 <template>
-    <Head title="Add Client" />
+    <Head title="Add Driver" />
 
     <BreezeAuthenticatedLayout>
         <template #header>
