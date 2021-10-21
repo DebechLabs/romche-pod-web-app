@@ -1,5 +1,5 @@
 <template>
-    <Head title="Add Job" />
+    <Head title="Edit Job" />
 
     <BreezeAuthenticatedLayout>
         <template #header>
@@ -59,6 +59,15 @@
 
                                 <div class="w-full lg:w-6/12 px-4">
                                     <div class="relative w-full mb-3">
+                                        <label class="block uppercase text-blueGray-600 mb-2">Vehicle</label>
+                                        <select name="driver" v-model="form.fleet_id" class="border-gray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" required>
+                                            <option v-for="fleet in $page.props.fleet" :key="fleet.id" :value="fleet.id">{{ fleet.registration_no }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="w-full lg:w-6/12 px-4">
+                                    <div class="relative w-full mb-3">
                                         <label class="block uppercase text-blueGray-600 mb-2">Status</label>
                                         <select name="status" v-model="form.status" class="border-gray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150">
                                             <option v-for="status in statuses" :key="status.id" :value="status.id">{{ status.text }}</option>
@@ -105,7 +114,8 @@ export default {
                 pickup: job.pickup,
                 destination: job.destination,
                 goods_description: job.goods_description,
-                status: job.status
+                status: job.status,
+                fleet_id: job.fleet_id
             }),
             statuses: [
                 { id: 'created', text: 'Created' },

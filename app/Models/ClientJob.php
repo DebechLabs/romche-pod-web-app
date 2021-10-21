@@ -16,11 +16,15 @@ class ClientJob extends Model
     protected $appends = ["date_created"];
 
     public function driver(){
-        return $this->hasOne(Driver::class, "id", "client_id");
+        return $this->hasOne(Driver::class, "id", "driver_id");
     }
 
     public function client(){
         return $this->belongsTo(Client::class, "client_id");
+    }
+
+    public function vehicle(){
+        return $this->hasOne(Fleet::class, "id", "fleet_id");
     }
 
     public function getDateCreatedAttribute(){

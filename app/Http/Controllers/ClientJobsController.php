@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\FirebaseHelper;
 use App\Models\Client;
 use App\Models\ClientJob;
 use App\Models\Driver;
@@ -10,9 +11,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Kreait\Laravel\Firebase\Facades\Firebase;
 
 class ClientJobsController extends Controller
 {
+    protected $firebase;
+    public function __construct()
+    {
+        $this->firebase = new FirebaseHelper();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -54,7 +62,7 @@ class ClientJobsController extends Controller
             'goods_description'     =>  'required',
             'pickup'                =>  'required',
             'destination'           =>  'required',
-            'vehicle'               =>  'required'
+            'fleet_id'              =>  'required'
         ]);
 
         $job = new ClientJob();
@@ -69,7 +77,15 @@ class ClientJobsController extends Controller
 
         $job->save();
 
+        $id = $job->id;
+
         $job->tracking_number = "R" . str_pad($job->id, 8, '0', STR_PAD_LEFT);
+
+        $job->save();
+
+        $firebaseReference = $this->firebase->saveData("Jobs", ($job->where('id', $id)->with('client', 'vehicle', 'driver')->first())->toArray());
+
+        $job->firebase_uid = $firebaseReference->getKey();
 
         $job->save();
 
@@ -95,7 +111,7 @@ class ClientJobsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|\Inertia\Response
      */
     public function edit($id)
     {
@@ -138,6 +154,8 @@ class ClientJobsController extends Controller
 
         $job->save();
 
+        $this->firebase->update("Jobs/{$job->firebase_uid}", $job->toArray());
+
         return Redirect::back()
             ->with("flash", [
                 'type'      =>  'success',
@@ -154,11 +172,22 @@ class ClientJobsController extends Controller
     public function destroy($id)
     {
         $job = ClientJob::findOrFail($id);
+
         $job->delete();
+
+        $this->firebase->delete("Jobs/{$job->firebase_uid}");
 
         return Redirect::back()->with("flash", [
             "type"      =>  "success",
             "message"   =>  "Successfully deleted job"
         ]);
+    }
+
+    public function sendToFirebase($data){
+        $firebaseHelper = new FirebaseHelper();
+//        $data = $firebaseHelper->get('Delivery/-MgqDS2a6J7tGSxK5DFj');
+
+        $data = $firebaseHelper->saveData("test/Jobs", ["driver" => ["name" => "Chrispine Otaalo", "email" => "c.otaalo@gmail.com"], "vehicle" => ["registration_no" => "KCS586K", "vehicle_type" => "lorry"], "client" => "DEBECH LABS", "pickup" => "Nairobi", "destination" => "Kisumu", "goods_description" => "This is a sample project"]);
+        dd($data->getKey());
     }
 }

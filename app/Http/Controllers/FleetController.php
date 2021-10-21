@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClientJob;
 use App\Models\Fleet;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -69,22 +71,23 @@ class FleetController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|\Inertia\Response
      */
     public function edit($id)
     {
-        //
+        return Inertia::render("Fleet/EditFleet")
+            ->with("vehicle", Fleet::find($id));
     }
 
     /**
@@ -92,21 +95,51 @@ class FleetController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'vehicle_type'      =>  "required",
+            "registration_no"   =>  "required",
+            "color"             =>  "required",
+            "chassis_no"        =>  "required",
+            "engine_no"         =>  "required",
+            "logbook_no"        =>  "required"
+        ]);
+
+        $fleet = Fleet::findOrFail($id);
+
+        $fleet->registration_no = $request->registration_no;
+        $fleet->vehicle_type = $request->vehicle_type;
+        $fleet->color = $request->color;
+        $fleet->chassis_no = $request->chassis_no;
+        $fleet->engine_no = $request->engine_no;
+        $fleet->logbook_no = $request->logbook_no;
+
+        $fleet->save();
+
+        return Redirect::back()
+            ->with("flash", [
+                'type'      =>  'success',
+                'message'   =>  "Successfully edited vehicle"
+            ]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        $vehicle = Fleet::findOrFail($id);
+        $vehicle->delete();
+
+        return Redirect::back()->with("flash", [
+            "type"      =>  "success",
+            "message"   =>  "Successfully deleted vehicle"
+        ]);
     }
 }

@@ -50,4 +50,6 @@ Route::get('/users', function () {
     return Inertia::render('Users');
 })->middleware(['auth', 'verified'])->name('users');
 
+Route::get("/test/firebase/{id}", [\App\Http\Controllers\ClientJobsController::class, "sendToFirebase"]);
+
 require __DIR__.'/auth.php';

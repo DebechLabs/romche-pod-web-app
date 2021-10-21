@@ -102,7 +102,8 @@ export default {
                 tracking_number: "",
                 pickup: "",
                 destination: "",
-                goods_description: ""
+                goods_description: "",
+                fleet_id: ""
             })
         }
     },

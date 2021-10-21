@@ -100,7 +100,7 @@ export default {
     },
     methods: {
         submitData: function(){
-            this.form.post(`${this.$routes('fleet.update', this.$page.props.vehicle.id)}`)
+            this.form.put(`${this.$routes('fleet.update', this.$page.props.vehicle.id)}`)
         }
     }
 }
